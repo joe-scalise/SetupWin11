@@ -25,7 +25,7 @@ $bloatwareList = @(
 
 # Get the latest version of PowerShell installed
 if ($PSVersionTable.PSVersion.Major -lt 7) {
-    iex "& { $(irm https://aka.ms/install-powershell.ps1) } -UseMSI"
+    iex "& { $(irm https://aka.ms/install-powershell.ps1) } -UseMSI -Quiet"
 }
 
 # Uninstall Bloatware-Apps
