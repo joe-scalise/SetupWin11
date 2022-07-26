@@ -23,6 +23,11 @@ $bloatwareList = @(
     "Microsoft.Todos", "Microsoft.549981C3F5F10_8wekyb3d8bbwe", "Microsoft.Windows.PeopleExperienceHost"
 )
 
+# Get the latest version of PowerShell installed
+if ($PSVersionTable.PSVersion.Major -lt 7) {
+    iex "& { $(irm https://aka.ms/install-powershell.ps1) } -UseMSI"
+}
+
 # Uninstall Bloatware-Apps
 foreach ($item in $bloatwareList) {
     Get-AppxPackage -Name $item | Select Name
