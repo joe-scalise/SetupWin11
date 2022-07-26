@@ -25,7 +25,7 @@ $bloatwareList = @(
 
 # Uninstall Bloatware-Apps
 foreach ($item in $bloatwareList) {
-    Get-AppxPackage -Name $item
+    Get-AppxPackage -Name $item | Select Name
     #Get-AppxPackage -Name $item| Remove-AppxPackage
     #Get-AppxProvisionedPackage -Online | Where-Object DisplayName -like $Bloat | Remove-AppxProvisionedPackage -Online
 }
