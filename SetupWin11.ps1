@@ -13,9 +13,12 @@ $bloatwareList = @(
 	"Microsoft.MicrosoftOfficeHub"
 	"Microsoft.MicrosoftSolitaireCollection"
 	"Microsoft.People"
+	"Microsoft.PowerAutomateDesktop"
+	"Microsoft.SecHealthUI"
 	"Microsoft.Todos"
 	"Microsoft.WindowsAlarms"
 	"microsoft.windowscommunicationsapps"
+	#"Microsoft.WindowsFeedbackHub"
 	"Microsoft.WindowsMaps"
 	"Microsoft.WindowsSoundRecorder"
 	"Microsoft.YourPhone"
@@ -23,7 +26,11 @@ $bloatwareList = @(
 	"Microsoft.ZuneVideo"
 	"MicrosoftWindows.Client.WebExperience"
 	"MicrosoftTeams"
+	"*Dropbox*"
+	"*Spotify*"
 )
+
+$ErrorActionPreference = "Stop"
 
 if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator"))
 {
@@ -31,16 +38,17 @@ if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
     exit
 }
 
-$ErrorActionPreference = "Stop"
-
 # Get the latest version of PowerShell installed
-if ($PSVersionTable.PSVersion.Major -lt 7) {
-    Invoke-Expression "& { $(Invoke-RestMethod https://aka.ms/install-powershell.ps1) } -UseMSI -Quiet"
-}
+Invoke-Expression "& { $(Invoke-RestMethod https://aka.ms/install-powershell.ps1) } -UseMSI -Quiet"
+
+#Uninstall Norton
+Invoke-RestMethod https://norton.com/nrnr -OutFile .\NRnR.exe
+Invoke-Expression .\NRnR.exe
 
 # Uninstall Bloatware-Apps
 foreach ($item in $bloatwareList) {
-    Get-AppxPackage -Name $item | Select Name
-    #Get-AppxPackage -Name $item| Remove-AppxPackage
-    #Get-AppxProvisionedPackage -Online | Where-Object DisplayName -like $Bloat | Remove-AppxProvisionedPackage -Online
+	if (Get-AppXPackage -AllUsers -Name $item) {
+		Write-Information "Removing $($item)" -InformationAction Continue
+	    Get-AppxPackage -AllUsers -Name $item | Remove-AppxPackage
+  	}
 }
